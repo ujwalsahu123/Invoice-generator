@@ -1,0 +1,182 @@
+/* General Styles */
+body {
+  font-family: Calibri, sans-serif;
+  font-size: 11pt;
+  color: #000;
+}
+
+#pdf-capture-container {
+  outline: 3px dashed red;
+  outline-offset: 2px;
+  padding: 2px; /* Add a little space so the outline isn't clipped */
+}
+
+#invoice-template {
+  background-color: #fff;
+  border: 2px solid #000; /* Made border thicker */
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 40px; /* Increased padding for more internal margin */
+  width: 21cm;
+  min-height: 29.7cm;
+  font-family: 'Calibri', sans-serif;
+  font-size: 11pt; /* Adjusted base font size */
+  color: #000;
+  line-height: 1.6; /* Increased line height for spacing */
+  letter-spacing: 0.4px; /* Decreased horizontal spacing */
+}
+
+/* Header */
+.invoice-header {
+  text-align: center; /* Center align the header content */
+  margin-bottom: 20px;
+}
+
+.invoice-title {
+  font-family: 'Arial Black', 'Arial Bold', sans-serif;
+  font-size: 30pt; /* Made heading larger */
+  font-weight: 900; /* Already at maximum standard boldness */
+  margin: 0 0 15px 0; /* Add margin to the bottom */
+  display: block;
+  line-height: 0.5;
+  padding: 20px 0; /* Made heading taller */
+}
+
+.invoice-details {
+  text-align: right;
+  font-size: 11pt;
+  width: 100%; /* Ensure it takes full width to align right */
+}
+
+.invoice-details p {
+  margin: 0; /* Remove margin to reduce vertical space */
+}
+
+/* Horizontal Rule */
+hr {
+  border: none;
+  border-top: 1px solid #000;
+  margin: 13px 0; /* Increased margin by 10% from 12px */
+}
+
+/* Section Margins and Typography */
+.personal-details {
+  margin-top: 22px; /* Increased margin by 10% from 20px */
+}
+
+.personal-details p,
+.bank-details p,
+.production-info p {
+    margin: 4px 0; /* Fine-tune vertical spacing */
+    font-size: 11pt;
+    line-height: 1.85; /* Increased line-height by 5% from 1.76 */
+}
+
+.rohit-sahu-name {
+  font-size: 1.2em; /* 20% larger */
+}
+
+#preview-accountNumber,
+#preview-ifscCode,
+#preview-panNumber {
+  font-size: 1.3em; /* 30% larger */
+}
+
+/* Bolding should be handled by <strong> tags in HTML */
+strong {
+    font-weight: 600; /* Decreased boldness */
+}
+
+/* Work Table */
+#preview-work-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#preview-work-table th,
+#preview-work-table td {
+  border: 1px solid #000;
+  padding: 6px 8px; /* Adjusted padding */
+  font-size: 11pt;
+  vertical-align: top; /* Align content to top of cell */
+}
+
+#preview-work-table thead {
+  background-color: #e7e6e6; /* Light grey from example */
+}
+
+#preview-work-table th {
+  font-weight: 600; /* Decreased boldness */
+  text-align: center;
+}
+
+/* Column Widths & Text Alignment */
+.date-col { width: 15%; text-align: center; }
+.particular-col { width: 55%; text-align: center; }
+.rate-col { width: 15%; text-align: center; }
+.amount-col { width: 15%; text-align: center; }
+
+/* Table Footer */
+#preview-work-table tfoot td {
+  border: 1px solid #000; /* Ensure footer cells have borders */
+  padding: 6px 8px;
+}
+
+.amount-words-cell {
+  text-align: left;
+  font-weight: 600; /* Decreased boldness */
+}
+
+.total-amount-cell {
+    font-weight: 600; /* Decreased boldness */
+    text-align: right;
+}
+
+.total-amount-cell .total-label {
+    float: left; /* Align "TOTAL AMOUNT" to the left within the cell */
+    font-weight: 600; /* Decreased boldness */
+}
+
+.total-amount-cell .total-value {
+    float: right; /* Align the value to the right */
+}
+
+/* Footer */
+.invoice-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.amount-in-words {
+  font-weight: 600; /* Decreased boldness */
+}
+
+.total-amount {
+  text-align: right;
+}
+
+.total-amount b {
+  font-weight: 600; /* Decreased boldness */
+}
+
+/* Responsive styles */
+@media screen and (max-width: 767px) {
+    #invoice-template {
+        width: 100%;
+        padding: 35px 50px; /* Set top/bottom padding to 10px and left/right to 50px */
+        font-size: 10pt;
+    }
+
+    .invoice-title {
+        font-size: 20pt; /* Decreased mobile heading size */
+        margin-top: 0; /* Removed space above the heading for mobile view */
+        border-bottom: 2px solid #000; /* Added bold underline */
+        padding-bottom: 13px; /* Increased space between text and underline */
+        display: inline-block; /* Make underline only as wide as the text */
+        margin-bottom: 40px; /* Added space between heading and date */
+    }
+}
+
+/* ===== PRINT/PDF STYLES ===== */
+/* Removing the @media print block as it was not effective with html2pdf.js */

@@ -1,0 +1,217 @@
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    background: #f2f2f2;
+    color: #333;
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  h1, h2, h3 {
+    margin-top: 0;
+    color: #222;
+  }
+  
+  form label {
+    display: block;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  form input[type="text"],
+  form input[type="date"],
+  form input[type="number"] {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  form button {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  form button:hover {
+    background-color: #0056b3;
+  }
+  
+  #workTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  #workTable th,
+  #workTable td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  #workTable th {
+    background-color: #f5f5f5;
+  }
+  
+  #workTable input {
+    width: 95%;
+    padding: 5px;
+    text-align: center;
+  }
+  
+  #invoice-preview {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+  }
+  
+  #downloadBtn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: green;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #downloadBtn:hover {
+    background: darkgreen;
+  }
+  
+  #totalAmount {
+    width: 200px;
+    display: inline-block;
+  }
+  
+  /* ===== MOBILE RESPONSIVENESS ===== */
+  
+  /* Mobile-first approach - styles for screens smaller than 768px */
+  @media screen and (max-width: 767px) {
+    
+    /* Container adjustments */
+    .container {
+      padding: 15px;
+      margin: 10px;
+    }
+  
+    /* Form adjustments */
+    body {
+      padding: 10px;
+    }
+  
+    h1 {
+      font-size: 24px;
+      text-align: center;
+    }
+  
+    /* Date input mobile fix */
+    #invoiceDate {
+      width: 100% !important;
+      max-width: 300px;
+    }
+  
+    /* Dropdown and name input mobile layout */
+    .position-container {
+      flex-direction: column !important;
+      gap: 10px !important;
+    }
+  
+    .position-container select,
+    .position-container input {
+      width: 100% !important;
+      flex: none !important;
+    }
+  
+    /* Table mobile responsiveness - make it scrollable */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 15px 0;
+    }
+  
+    #workTable {
+      min-width: 600px; /* Minimum width to prevent cramping */
+      font-size: 14px;
+    }
+  
+    #workTable th,
+    #workTable td {
+      padding: 8px 4px;
+      min-width: 80px;
+    }
+  
+    #workTable input {
+      width: 90%;
+      padding: 4px;
+      font-size: 14px;
+    }
+  
+    /* Remove button adjustments */
+    .removeRowBtn {
+      padding: 5px 8px !important;
+      font-size: 14px !important;
+    }
+  
+    /* Button adjustments */
+    #addRowBtn,
+    button[type="submit"],
+    #downloadBtn {
+      width: 100%;
+      max-width: 300px;
+      margin: 10px auto;
+      display: block;
+      padding: 12px;
+      font-size: 16px;
+    }
+  
+    /* Total amount field */
+    #totalAmount {
+      width: 100%;
+      max-width: 200px;
+    }
+  
+    /* Make preview table scrollable too */
+    .preview-table-container {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+  
+  /* Tablet adjustments - screens between 768px and 1024px */
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    .container {
+      padding: 25px;
+    }
+  
+    #workTable {
+      font-size: 15px;
+    }
+  
+    #workTable th,
+    #workTable td {
+      padding: 9px 6px;
+    }
+  }

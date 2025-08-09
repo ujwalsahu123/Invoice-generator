@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Invoice Generator - Rohit Sahu</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="invoice-template.css" />
+  <!-- Using CDN for html2pdf library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Invoice Generator</h1>
+
+    <!-- === FORM === -->
+    <form id="invoice-form">
+      <label>Invoice Date:</label>
+      <input type="date" id="invoiceDate" required style="width: 200px; margin-top: 5px; margin-bottom: 25px;">
+      
+      <label style="margin-bottom: 25px;">Role: <input type="text" id="role" required></label>
+      
+      <label style="margin-bottom: 25px;">Production Name: <input type="text" id="productionName" required></label>
+      
+      <label style="margin-bottom: 25px;">Project Name: <input type="text" id="projectName" required></label>
+      
+      <div style="display: flex; gap: 10px; align-items: center; margin: 25px 0;">
+        <select id="positionType" required>
+          <option value="">Select Position</option>
+          <option value="DOP Name" selected>DOP Name</option>
+          <option value="Director Name">Director Name</option>
+        </select>
+        <input type="text" id="personName" placeholder="Name" required style="flex: 1;">
+      </div>
+      
+      <label style="margin-bottom: 25px;">Location: <input type="text" id="location" required></label>
+
+      <div class="table-container">
+        <table id="workTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Particular</th>
+              <th>Rate</th>
+              <th>Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="workTableBody">
+            <!-- Dynamic Rows Here -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div style="text-align: center; margin: 15px 0;">
+        <button type="button" id="addRowBtn" style="padding: 8px 16px; font-size: 14px; width: auto; display: inline-block;">+ Add Row</button>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <label>Total Amount: 
+          <input type="number" id="totalAmount" step="0.01">
+        </label>
+      </div>
+
+      <div style="text-align: center; margin: 20px 0;">
+        <button type="submit">Generate Invoice</button>
+      </div>
+    </form>
+    
+    <!-- === INVOICE PREVIEW === -->
+    <div id="invoice-preview" style="display: none;">
+      <hr>
+      <h2>Invoice Template</h2>
+      <div id="pdf-capture-container"> <!-- New container for PDF capture -->
+        <div id="invoice-template">
+          <!-- Header -->
+          <div class="invoice-header">
+            <h1 class="invoice-title">INVOICE</h1>
+            <div class="invoice-details">
+              <p>Date: <span id="preview-invoiceDate"></span></p>
+              <p>Invoice No: 02</p>
+            </div>
+          </div>
+
+          <!-- Personal Details -->
+          <div class="personal-details">
+              <p><strong>Name:</strong>&nbsp;&nbsp;<strong class="rohit-sahu-name">ROHIT SAHU</strong> (<span id="preview-role"></span>)</p>
+              <p><strong>Mobile no:</strong>&nbsp;&nbsp;9821077166</p>
+              <p><strong>Address:</strong>&nbsp;&nbsp;flat no.102, bld no.12-A Sahyadri Nagar, Kashimira, Miraroad (e) 401107</p>
+          </div>
+          <hr>
+
+          <!-- Bank Details -->
+          <div class="bank-details">
+              <p><strong>Bank Details:</strong>&nbsp;&nbsp;</p>
+              <p>ICICI Bank, Lokhandwala Branch, Andheri West, Mumbai, India</p>
+              <p><strong>Saving A/c No.</strong>&nbsp;<strong><span id="preview-accountNumber">026301503179</span></strong>&nbsp;&nbsp;&nbsp;<strong>IFSC Code</strong>&nbsp;<strong><span id="preview-ifscCode">ICIC0000263</span></strong>&nbsp;&nbsp;&nbsp;<strong>Pan No.</strong>&nbsp;<strong><span id="preview-panNumber">AXRPS2728P</span></strong></p>
+          </div>
+          <hr>
+
+          <!-- Production Info -->
+          <div class="production-info">
+              <p><strong>Production Name:</strong>&nbsp;&nbsp;<span id="preview-productionName"></span></p>
+              <p><strong>Project Name:</strong>&nbsp;&nbsp;<span id="preview-projectName"></span></p>
+              <p><strong id="preview-position-label"></strong>&nbsp;&nbsp;<span id="preview-person-name"></span></p>
+              <p><strong>Location:</strong>&nbsp;&nbsp;<span id="preview-location"></span></p>
+          </div>
+          <hr>
+
+          <!-- Work Table -->
+          <div class="preview-table-container">
+            <table id="preview-work-table">
+              <thead>
+                <tr>
+                  <th class="date-col">Date</th>
+                  <th class="particular-col">Particular</th>
+                  <th class="rate-col">Rate<br>(Per Day)</th>
+                  <th class="amount-col">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Filled dynamically -->
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" class="amount-words-cell">
+                    Amount in words:&nbsp;&nbsp;<span id="preview-amountWords"></span>
+                  </td>
+                  <td colspan="2" class="total-amount-cell">
+                    <span class="total-label">TOTAL AMOUNT :</span>
+                    <span class="total-value">₹<span id="preview-totalAmount"></span>/-</span>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <!-- Amount Summary -->
+          <div class="amount-summary" style="display: none;">
+              <p><strong>Amount in words:</strong> <span id="preview-amountWords-hidden"></span> Only /-</p>
+              <p><strong>TOTAL AMOUNT</strong> ₹<span id="preview-totalAmount-hidden"></span>/-</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin: 20px 0;">
+        <button id="downloadBtn">Download PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
