@@ -104,6 +104,60 @@
     display: inline-block;
   }
   
+  /* Downward arrow styling */
+  #scroll-down-arrow {
+    text-align: center;
+    margin: 10px auto;
+  }
+  
+  .arrow-down {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    margin: 0 auto;
+  }
+  
+  .arrow-down:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 18px;
+    background-color: #007bff;
+  }
+  
+  .arrow-down:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #007bff;
+  }
+  
+  /* Spinner for Download Button */
+  .spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
   /* ===== MOBILE RESPONSIVENESS ===== */
   
   /* Mobile-first approach - styles for screens smaller than 768px */

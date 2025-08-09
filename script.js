@@ -138,11 +138,17 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
     }
 
     const invoiceElement = document.getElementById('invoice-template');
+    const downloadBtn = document.getElementById('downloadBtn');
     
     if (!invoiceElement || !invoiceElement.textContent.trim()) {
       alert('Invoice appears to be empty. Please generate the invoice first.');
       return;
     }
+
+    // Show loading spinner on the download button
+    const originalButtonText = downloadBtn.innerHTML;
+    downloadBtn.innerHTML = '<div class="spinner"></div> Processing...';
+    downloadBtn.disabled = true;
 
     // Options for html2pdf
     const opt = {
@@ -172,6 +178,10 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
         invoiceElement.style.transform = '';
         invoiceElement.style.transformOrigin = '';
         console.log('PDF saved and styles reset.');
+        
+        // Restore the download button
+        downloadBtn.innerHTML = originalButtonText;
+        downloadBtn.disabled = false;
       }).catch(err => {
         // Reset styles even if there's an error
         document.body.classList.remove('pdf-generation-view'); // Remove the class
@@ -179,6 +189,10 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
         invoiceElement.style.transformOrigin = '';
         console.error('PDF generation failed:', err);
         alert('Failed to generate PDF. Check console for details.');
+        
+        // Restore the download button
+        downloadBtn.innerHTML = originalButtonText;
+        downloadBtn.disabled = false;
       });
     }, 2000); // 2-second delay
   }
@@ -197,7 +211,20 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
   document.getElementById('invoice-form').addEventListener('submit', (e) => {
     e.preventDefault();
     fillInvoicePreview();
+    
+    // Show the downward arrow to guide users
+    document.getElementById('scroll-down-arrow').style.display = 'block';
+    
+    // Show the invoice preview
     document.getElementById('invoice-preview').style.display = 'block';
+    
+    // Only scroll a little bit down to show the arrow
+    setTimeout(() => {
+      window.scrollBy({
+        top: 100,
+        behavior: 'smooth'
+      });
+    }, 100);
   });
   
   // Download PDF
