@@ -152,9 +152,9 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
 
     // Options for html2pdf
     const opt = {
-      margin:       [0,0,0,0], 
+      margin:       [10,4,10,4], // top, right, bottom, left [12,4,12,4],(this is the padding of the pdf) dont touch this 
       filename:     'invoice_rohit_sahu.pdf',
-      image:        { type: 'jpeg', quality: 0.98 },
+      image:        { type: 'jpeg', quality: 1.0 },
       html2canvas:  { scale: 2, useCORS: true, logging: true, scrollX: 0, scrollY: 0 },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
@@ -163,7 +163,7 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
     document.body.classList.add('pdf-generation-view');
 
     // Apply temporary scaling and centering before the delay
-    invoiceElement.style.transform = 'scale(0.93)';
+    invoiceElement.style.transform = 'scale(0.93)';  // dont touch this 
     invoiceElement.style.transformOrigin = 'center center'; 
 
     console.log('Styles applied. Waiting 2 seconds before generating PDF...');

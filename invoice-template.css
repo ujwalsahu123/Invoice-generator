@@ -15,7 +15,7 @@ body {
   background-color: #fff;
   border: 2px solid #000; /* Made border thicker */
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  padding: 40px; /* Increased padding for more internal margin */
+  padding: 40px;  /* dont touch this */
   width: 21cm;
   min-height: 29.7cm;
   font-family: 'Calibri', sans-serif;
@@ -164,8 +164,9 @@ strong {
 @media screen and (max-width: 767px) {
     #invoice-template {
         width: 100%;
-        padding: 35px 50px; /* Set top/bottom padding to 10px and left/right to 50px */
+        padding: 35px 50px; /* this is the padding of the border line - this is to set the gap between the border and the content inside */  /* dont touch this */
         font-size: 10pt;
+        margin: -38px 0;    /*we can do this to remove the margin of the border line , but not prefered */
     }
 
     .invoice-title {
