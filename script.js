@@ -144,13 +144,24 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
       return;
     }
 
+    // Request notification permission as early as possible
+    if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+      Notification.requestPermission();
+    }
+
+    // Generate a 3-digit alphanumeric code for the filename
+    const alphanumericCode = generateAlphanumericCode(3);
+    const filename = `invoice_rohit_sahu_${alphanumericCode}.pdf`;
+
     // Options for html2pdf
     const opt = {
       margin:       [0,0,0,0], 
-      filename:     'invoice_rohit_sahu.pdf',
+      filename:     filename,
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { scale: 2, useCORS: true, logging: true, scrollX: 0, scrollY: 0 },
-      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      // Override the browser's default download behavior
+      output: 'blob'
     };
 
     // Add a class to the body to apply PDF-specific styles
@@ -162,25 +173,143 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
 
     console.log('Styles applied. Waiting 2 seconds before generating PDF...');
     
+    // Update download button text and disable it during processing
+    const downloadBtn = document.getElementById('downloadBtn');
+    const originalBtnText = downloadBtn.textContent;
+    downloadBtn.textContent = "Processing...";
+    downloadBtn.disabled = true;
+    
     // Add a delay to ensure the scaled invoice is fully rendered before capturing
     setTimeout(() => {
       console.log('Timer finished. Generating PDF now.');
       
-      html2pdf().from(invoiceElement).set(opt).save().then(() => {
-        // Reset styles after saving
-        document.body.classList.remove('pdf-generation-view'); // Remove the class
+      // Use a different approach that avoids the browser's download confirmation
+      html2pdf().from(invoiceElement).set(opt).outputPdf('blob').then((pdfBlob) => {
+        // Reset styles after generating
+        document.body.classList.remove('pdf-generation-view');
         invoiceElement.style.transform = '';
         invoiceElement.style.transformOrigin = '';
-        console.log('PDF saved and styles reset.');
+        
+        // Create a URL for the blob
+        const blobUrl = URL.createObjectURL(pdfBlob);
+        
+        // Create an invisible link element and trigger the download programmatically
+        const downloadLink = document.createElement('a');
+        downloadLink.style.display = 'none';
+        downloadLink.href = blobUrl;
+        downloadLink.download = filename;
+        document.body.appendChild(downloadLink);
+        
+        // Trigger a click on the link to start the download without confirmation
+        downloadLink.click();
+        
+        // Clean up
+        setTimeout(() => {
+          URL.revokeObjectURL(blobUrl);
+          document.body.removeChild(downloadLink);
+          console.log('PDF saved and styles reset.');
+          
+          // Show browser notification after PDF is downloaded
+          showBrowserNotification(filename);
+          
+          // Reset download button
+          downloadBtn.textContent = originalBtnText;
+          downloadBtn.disabled = false;
+        }, 100);
       }).catch(err => {
         // Reset styles even if there's an error
-        document.body.classList.remove('pdf-generation-view'); // Remove the class
+        document.body.classList.remove('pdf-generation-view');
         invoiceElement.style.transform = '';
         invoiceElement.style.transformOrigin = '';
         console.error('PDF generation failed:', err);
         alert('Failed to generate PDF. Check console for details.');
+        
+        // Reset download button
+        downloadBtn.textContent = originalBtnText;
+        downloadBtn.disabled = false;
       });
     }, 2000); // 2-second delay
+  }
+  
+  // Function to generate a random alphanumeric code of specified length
+  function generateAlphanumericCode(length) {
+    const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Removed confusing characters like I, O, 0, 1
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+  }
+
+  // ===== Show Browser Notification =====
+  function showBrowserNotification(filename) {
+    // Check if the browser supports notifications
+    if (!("Notification" in window)) {
+      console.log("This browser does not support desktop notifications");
+      alert("Your invoice PDF has been downloaded successfully! Click OK to open the file.");
+      
+      // Try to open downloads folder directly
+      openDownloadedFile(filename);
+      return;
+    }
+    
+    // Check if permission is already granted
+    if (Notification.permission === "granted") {
+      // If it's granted, create a notification
+      createNotification(filename);
+    } 
+    // Otherwise, request permission
+    else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then(function (permission) {
+        // If the user accepts, create a notification
+        if (permission === "granted") {
+          createNotification(filename);
+        } else {
+          // Fall back to alert if notification permission denied
+          alert("Your invoice PDF has been downloaded successfully! Click OK to open the file.");
+          openDownloadedFile(filename);
+        }
+      });
+    } else {
+      // Fall back to alert if notification permission was previously denied
+      alert("Your invoice PDF has been downloaded successfully! Click OK to open the file.");
+      openDownloadedFile(filename);
+    }
+  }
+
+  // Helper function to create the notification
+  function createNotification(filename) {
+    const options = {
+      body: `Your invoice is ready! Tap to open the file.`,
+      icon: 'https://cdn-icons-png.flaticon.com/512/337/337946.png', // PDF icon
+      requireInteraction: false // Auto-dismiss after default time
+    };
+    
+    const notification = new Notification("Invoice Downloaded", options);
+    
+    // Handle notification click
+    notification.onclick = function() {
+      openDownloadedFile(filename);
+      notification.close();
+    };
+  }
+
+  // Helper function to try to open the downloaded file
+  function openDownloadedFile(filename) {
+    // Try to open the most likely download location based on the browser
+    if (navigator.userAgent.indexOf("Chrome") !== -1) {
+      window.open('chrome://downloads', '_blank');
+    } else if (navigator.userAgent.indexOf("Firefox") !== -1) {
+      window.open('about:downloads', '_blank');
+    } else if (navigator.userAgent.indexOf("Edge") !== -1 || navigator.userAgent.indexOf("Edg") !== -1) {
+      window.open('edge://downloads', '_blank');
+    } else {
+      // For other browsers or if specific protocol fails, try to open the downloads folder
+      const a = document.createElement('a');
+      a.href = filename;
+      a.download = filename;
+      a.click();
+    }
   }
   
   // ===== Event Listeners =====
