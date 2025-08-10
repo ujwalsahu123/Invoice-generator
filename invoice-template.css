@@ -93,6 +93,10 @@ strong {
     margin-top: 15px;
 }
 
+#preview-work-table tr {
+    page-break-inside: avoid; /* Keep table rows intact across pages */
+}
+
 #preview-work-table th,
 #preview-work-table td {
   border: 1px solid #000;
