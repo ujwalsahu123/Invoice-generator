@@ -1,28 +1,51 @@
 // ===== Add Row to Table =====
-function addRow(date = '', particular = '', rate = '', amount = '') {
+function addRow(date = '', particular = 'Daily wages', rate = '', amount = '') {
+    const globalRate = document.getElementById('globalRate').value;
+    const newRate = rate || globalRate;
+    const newAmount = amount || globalRate;
+
     const tableBody = document.getElementById('workTableBody');
+    // Calculate the next serial number based on existing rows
+    const rowCount = tableBody.querySelectorAll('tr').length + 1;
+    
     const row = document.createElement('tr');
   
     row.innerHTML = `
+      <td class="sr-no">${rowCount}</td>
       <td><input type="date" class="row-date" value="${date}"></td>
       <td><input type="text" class="row-particular" value="${particular}"></td>
-      <td><input type="number" class="row-rate" value="${rate}" step="1"></td>
-      <td><input type="number" class="row-amount" value="${amount}" step="1"></td>
+      <td><input type="text" class="row-rate" value="${newRate}"></td>
+      <td><input type="number" class="row-amount" value="${newAmount}" step="1"></td>
       <td><button type="button" class="removeRowBtn">–</button></td>
     `;
   
     tableBody.appendChild(row);
     updateTotal();
-  
+    
     // Remove row on click
     row.querySelector('.removeRowBtn').addEventListener('click', () => {
       row.remove();
       updateTotal();
+      // Update all row numbers after removal
+      updateRowNumbers();
     });
   
     // Recalculate total if amount changes
     row.querySelectorAll('.row-amount').forEach(input => {
       input.addEventListener('input', updateTotal);
+    });
+  }
+  
+  // ===== Update Row Numbers =====
+  function updateRowNumbers() {
+    const tableBody = document.getElementById('workTableBody');
+    const rows = tableBody.querySelectorAll('tr');
+    
+    rows.forEach((row, index) => {
+      const srNoCell = row.querySelector('.sr-no');
+      if (srNoCell) {
+        srNoCell.textContent = index + 1;
+      }
     });
   }
   
@@ -33,6 +56,16 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
       total += parseInt(input.value || 0);
     });
     document.getElementById('totalAmount').value = total;
+  }
+
+  // ===== Update All Rows with Global Rate =====
+  function updateAllRowsRate() {
+    const globalRate = document.getElementById('globalRate').value;
+    document.querySelectorAll('#workTableBody tr').forEach(row => {
+      row.querySelector('.row-rate').value = globalRate;
+      row.querySelector('.row-amount').value = globalRate;
+    });
+    updateTotal();
   }
 
   // ===== Format Date to DD-MM-YYYY =====
@@ -47,7 +80,18 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
 
   // ===== Handle Position Type Change =====
   function handlePositionTypeChange() {
-    // No longer needed since both fields are always visible
+    const positionType = document.getElementById('positionType').value;
+    const personNameInput = document.getElementById('personName');
+    const personNameContainer = personNameInput.parentElement;
+
+    if (positionType === 'Null') {
+      personNameContainer.style.display = 'none';
+      personNameInput.value = '';
+      personNameInput.required = false;
+    } else {
+      personNameContainer.style.display = 'block';
+      personNameInput.required = true;
+    }
   }
 
   // ===== Convert Number to Words (Indian style) =====
@@ -76,6 +120,7 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
     const invoiceDate = document.getElementById('invoiceDate').value;
     document.getElementById('preview-invoiceDate').textContent = formatDateToDDMMYYYY(invoiceDate);
     
+    document.getElementById('preview-invoiceNumber').textContent = document.getElementById('invoiceNumber').value;
     document.getElementById('preview-role').textContent = document.getElementById('role').value;
     document.getElementById('preview-productionName').textContent = document.getElementById('productionName').value;
     document.getElementById('preview-projectName').textContent = document.getElementById('projectName').value;
@@ -87,13 +132,13 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
     const positionLabelEl = document.getElementById('preview-position-label');
     const personNameEl = document.getElementById('preview-person-name');
 
-    if (positionType && personName) {
+    if (positionType && personName && positionType !== 'Null') {
       positionLabelEl.textContent = positionType + ':'; // Add colon here
       personNameEl.textContent = personName;
       // Ensure the parent <p> tag is visible
       positionLabelEl.parentElement.style.display = 'block';
     } else {
-      // Hide the parent <p> tag if there's no content
+      // Hide the parent <p> tag if there's no content or position is Null
       positionLabelEl.parentElement.style.display = 'none';
     }
     
@@ -113,7 +158,7 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
       tr.innerHTML = `
         <td style="text-align: center;">${formatDateToDDMMYYYY(rowDates[i].value)}</td>
         <td style="text-align: center;">${rowParticulars[i].value}</td>
-        <td style="text-align: center;">${parseInt(rowRates[i].value || 0)}</td>
+        <td style="text-align: center;">${rowRates[i].value}</td>
         <td style="text-align: center;">${parseInt(rowAmounts[i].value || 0)}</td>
       `;
       tableBody.appendChild(tr);
@@ -200,7 +245,9 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
   // ===== Event Listeners =====
   document.getElementById('addRowBtn').addEventListener('click', () => addRow());
   
-  // Remove the position type change event listener since it's no longer needed
+  document.getElementById('positionType').addEventListener('change', handlePositionTypeChange);
+
+  document.getElementById('globalRate').addEventListener('input', updateAllRowsRate);
   
   // Add a default row on load
   window.addEventListener('load', () => {
@@ -213,7 +260,16 @@ function addRow(date = '', particular = '', rate = '', amount = '') {
     fillInvoicePreview();
     
     // Show the downward arrow to guide users
-    document.getElementById('scroll-down-arrow').style.display = 'block';
+    const scrollArrow = document.getElementById('scroll-down-arrow');
+    scrollArrow.style.display = 'block';
+
+    // Animate the arrow
+    const arrow = scrollArrow.querySelector('.arrow-down');
+    // Remove class first to re-trigger animation on subsequent clicks
+    arrow.classList.remove('arrow-animated'); 
+    // Add the class to trigger the animation
+    void arrow.offsetWidth; // Trigger reflow
+    arrow.classList.add('arrow-animated');
     
     // Show the invoice preview
     document.getElementById('invoice-preview').style.display = 'block';

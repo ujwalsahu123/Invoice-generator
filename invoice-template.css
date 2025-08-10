@@ -91,6 +91,7 @@ strong {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
+    border: 2px solid #000; /* Making the outer border of the table thicker */
 }
 
 #preview-work-table tr {
@@ -132,17 +133,20 @@ strong {
 }
 
 .total-amount-cell {
-    font-weight: 600; /* Decreased boldness */
-    text-align: right;
+  font-weight: 600; /* Decreased boldness */
+  text-align: center; /* Center the content */
+  padding: 10px 5px; /* Add more padding for better spacing */
 }
 
 .total-amount-cell .total-label {
-    float: left; /* Align "TOTAL AMOUNT" to the left within the cell */
-    font-weight: 600; /* Decreased boldness */
+  display: inline-block; /* Change from float to inline-block */
+  margin-right: 10px; /* Add space between label and value */
+  font-weight: 600; /* Decreased boldness */
 }
 
 .total-amount-cell .total-value {
-    float: right; /* Align the value to the right */
+  display: inline-block; /* Change from float to inline-block */
+  font-weight: bold; /* Make the amount value stand out */
 }
 
 /* Footer */

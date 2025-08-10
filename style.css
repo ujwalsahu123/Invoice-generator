@@ -31,11 +31,12 @@
   
   form input[type="text"],
   form input[type="date"],
-  form input[type="number"] {
+  form input[type="number"],
+  form select {
     width: 100%;
     padding: 8px 10px;
     margin-top: 5px;
-    border: 1px solid #ccc;
+    border: 2px solid #333;
     border-radius: 4px;
   }
   
@@ -61,9 +62,18 @@
     margin-bottom: 10px;
   }
   
+  /* Sr. No. column width adjustment */
+  #workTable th:first-child,
+  #workTable td:first-child {
+    width: 30px;
+    max-width: 30px;
+    min-width: 25px;
+    padding: 5px;
+  }
+  
   #workTable th,
   #workTable td {
-    border: 1px solid #ccc;
+    border: 2px solid #333;
     padding: 10px;
     text-align: center;
   }
@@ -76,6 +86,7 @@
     width: 95%;
     padding: 5px;
     text-align: center;
+    border: 1px solid #333;
   }
   
   #invoice-preview {
@@ -107,13 +118,30 @@
   /* Downward arrow styling */
   #scroll-down-arrow {
     text-align: center;
-    margin: 10px auto;
+    margin: 120px auto; /* Significantly increased space around the arrow */
+    padding: 40px 0; /* Additional padding for more space */
   }
   
+  .arrow-animated {
+    animation: bounce-down 1.5s ease-in-out;
+  }
+
+  @keyframes bounce-down {
+    0%, 50%, 100% {
+      transform: translateY(0);
+    }
+    25% {
+      transform: translateY(-20px);
+    }
+    75% {
+      transform: translateY(-10px);
+    }
+  }
+
   .arrow-down {
     position: relative;
-    width: 24px;
-    height: 24px;
+    width: 60px; /* Even wider arrow */
+    height: 80px; /* Much taller arrow */
     margin: 0 auto;
   }
   
@@ -123,9 +151,9 @@
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 2px;
-    height: 18px;
-    background-color: #007bff;
+    width: 20px; /* Super thick arrow line */
+    height: 60px; /* Much longer stem */
+    background-color: green; /* Green arrow color */
   }
   
   .arrow-down:after {
@@ -136,9 +164,9 @@
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid #007bff;
+    border-left: 30px solid transparent; /* Extra large arrowhead */
+    border-right: 30px solid transparent; /* Extra large arrowhead */
+    border-top: 30px solid green; /* Extra large arrowhead */
   }
   
   /* Spinner for Download Button */
